@@ -1,0 +1,23 @@
+name: Build and Run Tests
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  Run-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run Unit Tests with Coverage
+        run: mvn test -Dspring.profiles.active=test

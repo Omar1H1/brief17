@@ -31,7 +31,7 @@ jobs:
               org.jacoco:jacoco-maven-plugin:report \
               org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-              -Dsonar.organization=Omar1H1-uZDWV@github \
+              -Dsonar.organization=Omar1H1_brief17 \
               --file pom.xml -B --no-transfer-progress
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

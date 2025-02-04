@@ -19,9 +19,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Run Unit Tests with Coverage
-        run: mvn test -Dspring.profiles.active=test
+
       - name: SonarQube Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        run: |
+          mvn clean \
+              -Dcheckstyle.skip=true \
+              -Dmaven.javadoc.skip=true \
+              org.jacoco:jacoco-maven-plugin:prepare-agent \
+              package \
+              verify -Dgpg.skip=true \
+              org.jacoco:jacoco-maven-plugin:report \
+              org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+              -Dsonar.organization=Omar1H1-uZDWV@github \
+              --file pom.xml -B --no-transfer-progress
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+        with:
+          scanMetadataReportFile: target/sonar/report-task.txt
